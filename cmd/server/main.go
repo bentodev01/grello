@@ -1,7 +1,8 @@
 package main
 
 import (
-	"context"
+	"flag"
+	"fmt"
 	"log"
 	"net"
 
@@ -10,42 +11,36 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	port = ":50051"
-)
-
-type server struct {
-	pb.UnimplementedBoardServiceServer
+type config struct {
+	host string
+	port int
+	env  string
 }
 
-func (s *server) GetBoard(ctx context.Context, req *pb.GetBoardRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
-}
-
-func (s *server) CreateBoard(ctx context.Context, req *pb.BoardRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
-}
-
-func (s *server) UpdateBoard(ctx context.Context, req *pb.UpdateBoardRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
-}
-
-func (s *server) DeleteBoard(ctx context.Context, req *pb.DeleteBoardRequest) (*pb.DeleteBoardResponse, error) {
-	return &pb.DeleteBoardResponse{Message: "Deleted"}, nil
-}
-
-func (s *server) AddTask(ctx context.Context, req *pb.AddTaskRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
+type application struct {
+	config config
 }
 
 func main() {
 	log.Println("Starting server..")
-	lis, err := net.Listen("tcp", port)
+	var cfg config
+	flag.StringVar(&cfg.host, "host", "localhost", "Service host")
+	flag.IntVar(&cfg.port, "port", 50051, "Service port")
+	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
+
+	flag.Parse()
+
+	app := &application{
+		config: cfg,
+	}
+
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", cfg.host, cfg.port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterBoardServiceServer(s, &server{})
+	grpcServer := app.NewServer()
+	pb.RegisterBoardServiceServer(s, grpcServer)
 	reflection.Register(s)
 	if err = s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
