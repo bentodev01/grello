@@ -82,7 +82,9 @@ func main() {
 	s := grpc.NewServer()
 	grpcServer := app.NewServer()
 	pb.RegisterBoardServiceServer(s, grpcServer)
-	reflection.Register(s)
+	if cfg.env == "development" {
+		reflection.Register(s)
+	}
 	if err = s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
