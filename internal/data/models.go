@@ -8,6 +8,6 @@ type Models struct {
 
 func NewModels(db *mongo.Client) Models {
 	return Models{
-		Board: BoardModel{DB: db},
+		Board: BoardModel{DB: db.Database("grello")},
 	}
 }

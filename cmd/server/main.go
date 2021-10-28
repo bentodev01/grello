@@ -80,7 +80,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	grpcServer := app.NewServer()
+	grpcServer := NewServer(app)
 	pb.RegisterBoardServiceServer(s, grpcServer)
 	if cfg.env == "development" {
 		reflection.Register(s)

@@ -8,6 +8,7 @@ import (
 
 type server struct {
 	pb.UnimplementedBoardServiceServer
+	app *application
 }
 
 func (s *server) GetBoard(ctx context.Context, req *pb.GetBoardRequest) (*pb.Board, error) {
@@ -15,7 +16,8 @@ func (s *server) GetBoard(ctx context.Context, req *pb.GetBoardRequest) (*pb.Boa
 }
 
 func (s *server) CreateBoard(ctx context.Context, req *pb.BoardRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
+	board, err := s.app.CreateBoardHandler(ctx, req)
+	return board, err
 }
 
 func (s *server) UpdateBoard(ctx context.Context, req *pb.UpdateBoardRequest) (*pb.Board, error) {
@@ -30,6 +32,6 @@ func (s *server) AddTask(ctx context.Context, req *pb.AddTaskRequest) (*pb.Board
 	return &pb.Board{Name: "test"}, nil
 }
 
-func (app *application) NewServer() *server {
-	return &server{}
+func NewServer(app *application) *server {
+	return &server{app: app}
 }
