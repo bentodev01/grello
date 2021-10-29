@@ -20,14 +20,6 @@ func (s *server) CreateBoard(ctx context.Context, req *pb.BoardRequest) (*pb.Boa
 	return board, err
 }
 
-func (s *server) UpdateBoard(ctx context.Context, req *pb.UpdateBoardRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
-}
-
-func (s *server) DeleteBoard(ctx context.Context, req *pb.DeleteBoardRequest) (*pb.DeleteBoardResponse, error) {
-	return &pb.DeleteBoardResponse{Message: "Deleted"}, nil
-}
-
 func (s *server) AddTask(ctx context.Context, req *pb.AddTaskRequest) (*pb.Board, error) {
 	return &pb.Board{Name: "test"}, nil
 }

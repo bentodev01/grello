@@ -54,7 +54,7 @@ func (m BoardModel) insert(ctx context.Context, name string, description string,
 	}
 	id := res.InsertedID.(primitive.ObjectID)
 	board := Board{
-		ID:          id.String(),
+		ID:          id.Hex(),
 		Name:        name,
 		Description: description,
 		UserIds:     userIds,

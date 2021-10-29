@@ -7,8 +7,6 @@ package board;
 service BoardService {
     rpc GetBoard (GetBoardRequest) returns (Board) {}
     rpc CreateBoard (BoardRequest) returns (Board) {}
-    rpc UpdateBoard (UpdateBoardRequest) returns (Board) {}
-    rpc DeleteBoard (DeleteBoardRequest) returns (DeleteBoardResponse) {}
     rpc AddTask (AddTaskRequest) returns (Board) {}
 }
 
@@ -20,15 +18,6 @@ message BoardRequest {
     string name = 1;
     string description = 2;
     repeated string member_ids = 3;
-}
-
-message UpdateBoardRequest {
-    string id = 1;
-    BoardRequest board = 2;
-}
-
-message DeleteBoardRequest {
-    string id = 1;
 }
 
 message AddTaskRequest {
