@@ -12,7 +12,8 @@ type server struct {
 }
 
 func (s *server) GetBoard(ctx context.Context, req *pb.GetBoardRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
+	board, err := s.app.GetBoardHandler(ctx, req)
+	return board, err
 }
 
 func (s *server) CreateBoard(ctx context.Context, req *pb.BoardRequest) (*pb.Board, error) {
@@ -20,8 +21,9 @@ func (s *server) CreateBoard(ctx context.Context, req *pb.BoardRequest) (*pb.Boa
 	return board, err
 }
 
-func (s *server) AddTask(ctx context.Context, req *pb.AddTaskRequest) (*pb.Board, error) {
-	return &pb.Board{Name: "test"}, nil
+func (s *server) AddTask(ctx context.Context, req *pb.AddTaskRequest) (*pb.TaskResponse, error) {
+	task, err := s.app.CreateTaskHandler(ctx, req)
+	return &pb.TaskResponse{Task: task, BoardId: req.BoardId}, err
 }
 
 func NewServer(app *application) *server {

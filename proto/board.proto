@@ -7,7 +7,7 @@ package board;
 service BoardService {
     rpc GetBoard (GetBoardRequest) returns (Board) {}
     rpc CreateBoard (BoardRequest) returns (Board) {}
-    rpc AddTask (AddTaskRequest) returns (Board) {}
+    rpc AddTask (AddTaskRequest) returns (TaskResponse) {}
 }
 
 message GetBoardRequest {
@@ -21,9 +21,10 @@ message BoardRequest {
 }
 
 message AddTaskRequest {
-    string name = 1;
-    string description = 2;
-    string assigned_to = 3;
+    string board_id = 1;
+    string name = 2;
+    string description = 3;
+    string assigned_to = 4;
 }
 
 message Board {
@@ -38,7 +39,7 @@ message Task {
     string id = 1;
     string name = 2;
     string description = 3;
-    string assigned_to = 4;
+    User assigned_to = 4;
 }
 
 message User {
@@ -48,5 +49,10 @@ message User {
 
 message DeleteBoardResponse {
     string message = 1;
+}
+
+message TaskResponse {
+    string board_id = 1;
+    Task task = 2;
 }
 

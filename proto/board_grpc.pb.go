@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type BoardServiceClient interface {
 	GetBoard(ctx context.Context, in *GetBoardRequest, opts ...grpc.CallOption) (*Board, error)
 	CreateBoard(ctx context.Context, in *BoardRequest, opts ...grpc.CallOption) (*Board, error)
-	AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*Board, error)
+	AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*TaskResponse, error)
 }
 
 type boardServiceClient struct {
@@ -49,8 +49,8 @@ func (c *boardServiceClient) CreateBoard(ctx context.Context, in *BoardRequest, 
 	return out, nil
 }
 
-func (c *boardServiceClient) AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*Board, error) {
-	out := new(Board)
+func (c *boardServiceClient) AddTask(ctx context.Context, in *AddTaskRequest, opts ...grpc.CallOption) (*TaskResponse, error) {
+	out := new(TaskResponse)
 	err := c.cc.Invoke(ctx, "/board.BoardService/AddTask", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (c *boardServiceClient) AddTask(ctx context.Context, in *AddTaskRequest, op
 type BoardServiceServer interface {
 	GetBoard(context.Context, *GetBoardRequest) (*Board, error)
 	CreateBoard(context.Context, *BoardRequest) (*Board, error)
-	AddTask(context.Context, *AddTaskRequest) (*Board, error)
+	AddTask(context.Context, *AddTaskRequest) (*TaskResponse, error)
 	mustEmbedUnimplementedBoardServiceServer()
 }
 
@@ -78,7 +78,7 @@ func (UnimplementedBoardServiceServer) GetBoard(context.Context, *GetBoardReques
 func (UnimplementedBoardServiceServer) CreateBoard(context.Context, *BoardRequest) (*Board, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateBoard not implemented")
 }
-func (UnimplementedBoardServiceServer) AddTask(context.Context, *AddTaskRequest) (*Board, error) {
+func (UnimplementedBoardServiceServer) AddTask(context.Context, *AddTaskRequest) (*TaskResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddTask not implemented")
 }
 func (UnimplementedBoardServiceServer) mustEmbedUnimplementedBoardServiceServer() {}
