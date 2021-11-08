@@ -8,8 +8,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/akileshsethu/grello/internal/data"
-	pb "github.com/akileshsethu/grello/proto"
+	"github.com/bentodev01/grello/internal/data"
+	pb "github.com/bentodev01/grello/proto"
 	"github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

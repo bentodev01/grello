@@ -1,4 +1,4 @@
-module github.com/akileshsethu/grello
+module github.com/bentodev01/grello
 
 go 1.17
 

@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	pb "github.com/akileshsethu/grello/proto"
+	pb "github.com/bentodev01/grello/proto"
 )
 
 func (app *application) CreateTaskHandler(ctx context.Context, taskRequest *pb.AddTaskRequest) (*pb.Task, error) {

@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 
-	pb "github.com/akileshsethu/grello/proto"
+	pb "github.com/bentodev01/grello/proto"
 )
 
 func (app *application) CreateBoardHandler(ctx context.Context, boardRequest *pb.BoardRequest) (*pb.Board, error) {
+	// insert does not need to be a goroutine. there is no reason to get users info while board is being created. its just to test out goroutines
 	boardChan := app.models.Board.Insert(ctx, boardRequest.Name, boardRequest.Description, boardRequest.MemberIds)
 	usersChan := app.models.User.GetAll(ctx, boardRequest.MemberIds)
 
