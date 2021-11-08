@@ -9,7 +9,7 @@ import (
 type Models struct {
 	Board interface {
 		Insert(ctx context.Context, name string, description string, userIds []string) <-chan BoardResult
-		Get(ctx context.Context, id string) <-chan BoardResult
+		Get(ctx context.Context, id string) BoardResult
 		AddTask(ctx context.Context, id string, taskId string) error
 	}
 	User interface {

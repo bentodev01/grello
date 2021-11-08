@@ -45,8 +45,7 @@ func (app *application) GetBoardHandler(ctx context.Context, request *pb.GetBoar
 	if boardResult.Err != nil {
 		if boardResult.Err == redis.Nil {
 			fmt.Println("board not in cache")
-			boardChan := app.models.Board.Get(ctx, request.Id)
-			boardResult = <-boardChan
+			boardResult = app.models.Board.Get(ctx, request.Id)
 			if boardResult.Err != nil {
 				return nil, boardResult.Err
 			}

@@ -112,29 +112,7 @@ func (m BoardModel) insert(ctx context.Context, name string, description string,
 	return BoardResult{Board: board}
 }
 
-func (m BoardModel) Get(ctx context.Context, id string) <-chan BoardResult {
-	resultChan := make(chan BoardResult)
-
-	go func() {
-		defer func() {
-			if err := recover(); err != nil {
-				resultChan <- BoardResult{Err: err.(error)}
-			}
-			close(resultChan)
-		}()
-
-		select {
-		case <-ctx.Done():
-			resultChan <- BoardResult{Err: ctx.Err()}
-			return
-		case resultChan <- m.get(ctx, id):
-		}
-	}()
-
-	return resultChan
-}
-
-func (m BoardModel) get(ctx context.Context, id string) BoardResult {
+func (m BoardModel) Get(ctx context.Context, id string) BoardResult {
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return BoardResult{Err: err}
