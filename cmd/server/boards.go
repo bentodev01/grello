@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	pb "github.com/bentodev01/grello/proto"
+	"github.com/go-redis/redis/v8"
 )
 
 func (app *application) CreateBoardHandler(ctx context.Context, boardRequest *pb.BoardRequest) (*pb.Board, error) {
@@ -39,10 +41,22 @@ func (app *application) CreateBoardHandler(ctx context.Context, boardRequest *pb
 }
 
 func (app *application) GetBoardHandler(ctx context.Context, request *pb.GetBoardRequest) (*pb.Board, error) {
-	boardChan := app.models.Board.Get(ctx, request.Id)
-	boardResult := <-boardChan
+	boardResult := app.caches.Board.Get(ctx, request.Id)
 	if boardResult.Err != nil {
-		return nil, boardResult.Err
+		if boardResult.Err == redis.Nil {
+			fmt.Println("board not in cache")
+			boardChan := app.models.Board.Get(ctx, request.Id)
+			boardResult = <-boardChan
+			if boardResult.Err != nil {
+				return nil, boardResult.Err
+			}
+
+			app.caches.Board.Set(ctx, boardResult.Board)
+		} else {
+			return nil, boardResult.Err
+		}
+	} else {
+		fmt.Println("Board in cache..")
 	}
 
 	usersChan := app.models.User.GetAll(ctx, boardResult.Board.UserIds)

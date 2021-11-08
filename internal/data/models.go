@@ -1,11 +1,25 @@
 package data
 
-import "go.mongodb.org/mongo-driver/mongo"
+import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type Models struct {
-	Board BoardModel
-	User  UserModel
-	Task  TaskModel
+	Board interface {
+		Insert(ctx context.Context, name string, description string, userIds []string) <-chan BoardResult
+		Get(ctx context.Context, id string) <-chan BoardResult
+		AddTask(ctx context.Context, id string, taskId string) error
+	}
+	User interface {
+		Get(ctx context.Context, id string) (User, error)
+		GetAll(ctx context.Context, ids []string) <-chan UsersResult
+	}
+	Task interface {
+		Insert(ctx context.Context, name, description, boardId, assignedTo string) TaskResult
+		GetAll(ctx context.Context, ids []string) <-chan TasksResult
+	}
 }
 
 func NewModels(db *mongo.Client) Models {

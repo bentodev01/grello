@@ -8,6 +8,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/bentodev01/grello/internal/cache"
 	"github.com/bentodev01/grello/internal/data"
 	pb "github.com/bentodev01/grello/proto"
 	"github.com/go-redis/redis/v8"
@@ -35,7 +36,7 @@ type config struct {
 type application struct {
 	config config
 	models data.Models
-	cache  *redis.Client
+	caches cache.Caches
 }
 
 func main() {
@@ -61,18 +62,18 @@ func main() {
 		}
 	}()
 
-	cache, err := openRedis(cfg)
+	c, err := openRedis(cfg)
 	if err != nil {
 		log.Fatalf("issue opening redis conncection: %v", err)
 	}
 	defer func() {
-		cache.Close()
+		c.Close()
 	}()
 
 	app := &application{
 		config: cfg,
 		models: data.NewModels(db),
-		cache:  cache,
+		caches: cache.NewCaches(c),
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", cfg.host, cfg.port))
