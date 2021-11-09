@@ -33,28 +33,6 @@ type TaskModel struct {
 	DB *mongo.Database
 }
 
-// func (m TaskModel) Insert(ctx context.Context, name, description, boardId, assignedTo string) <-chan TaskResult {
-// 	resultChan := make(chan TaskResult)
-
-// 	go func() {
-// 		defer func() {
-// 			if err := recover(); err != nil {
-// 				resultChan <- TaskResult{Err: err.(error)}
-// 			}
-// 			close(resultChan)
-// 		}()
-
-// 		select {
-// 		case <-ctx.Done():
-// 			resultChan <- TaskResult{Err: ctx.Err()}
-// 			return
-// 		case resultChan <- m.insert(ctx, name, description, boardId, assignedTo):
-// 		}
-// 	}()
-
-// 	return resultChan
-// }
-
 func (m TaskModel) Insert(ctx context.Context, name, description, boardId, assignedTo string) TaskResult {
 	res, err := m.DB.Collection("tasks").InsertOne(ctx, bson.D{{"name", name}, {"description", description}, {"board_id", boardId}, {"assigned_to", assignedTo}})
 	if err != nil {

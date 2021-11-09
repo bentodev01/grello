@@ -13,7 +13,7 @@ type BoardCache struct {
 }
 
 func (c BoardCache) Get(ctx context.Context, id string) data.BoardResult {
-	key := fmt.Sprintf("/task/%s", id)
+	key := fmt.Sprintf("/board/%s", id)
 	res := c.Cache.Get(ctx, key)
 
 	value, err := res.Result()
@@ -29,7 +29,7 @@ func (c BoardCache) Get(ctx context.Context, id string) data.BoardResult {
 }
 
 func (c BoardCache) Set(ctx context.Context, b data.Board) error {
-	key := fmt.Sprintf("/task/%s", b.ID.Hex())
+	key := fmt.Sprintf("/board/%s", b.ID.Hex())
 	value, err := b.ToJson()
 	if err != nil {
 		return err
